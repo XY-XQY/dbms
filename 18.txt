@@ -1,0 +1,68 @@
+db.city.insertMany([
+  { city: "Pune", type: "Urban", state: "MH", population: 5600000 },
+  { city: "Mumbai", type: "Urban", state: "MH", population: 12400000 },
+  { city: "Nagpur", type: "Urban", state: "MH", population: 2400000 },
+  { city: "Jaipur", type: "Urban", state: "RJ", population: 3100000 },
+  { city: "Udaipur", type: "Urban", state: "RJ", population: 560000 },
+  { city: "Ajmer", type: "Urban", state: "RJ", population: 540000 },
+  { city: "Goa", type: "Urban", state: "GA", population: 1500000 },
+  { city: "Panaji", type: "Urban", state: "GA", population: 150000 }
+])
+
+
+i) Statewise population
+var mapState = function() {
+  emit(this.state, this.population);
+};
+
+var reduceState = function(key, values) {
+  return Array.sum(values);
+};
+
+db.city.mapReduce(
+  mapState,
+  reduceState,
+  { out: "statewise_population" }
+)
+
+# View result
+db.statewise_population.find().pretty()
+
+
+
+ii) Citywise population
+var mapCity = function() {
+  emit(this.city, this.population);
+};
+
+var reduceCity = function(key, values) {
+  return Array.sum(values);
+};
+
+db.city.mapReduce(
+  mapCity,
+  reduceCity,
+  { out: "citywise_population" }
+)
+
+# View result
+db.citywise_population.find().pretty()
+
+
+iii) Typewise population
+var mapType = function() {
+  emit(this.type, this.population);
+};
+
+var reduceType = function(key, values) {
+  return Array.sum(values);
+};
+
+db.city.mapReduce(
+  mapType,
+  reduceType,
+  { out: "typewise_population" }
+)
+
+# View result
+db.typewise_population.find().pretty()

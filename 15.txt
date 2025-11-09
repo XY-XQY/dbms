@@ -1,0 +1,55 @@
+db.Students.insertMany([
+  { RollNo: 1, Name: "Aarav", Age: 16, Branch: "Computer", Address: { City: "Pune", State: "MH" }, Hobbies: ["Cricket","Reading"] },
+  { RollNo: 2, Name: "Isha", Age: 17, Branch: "IT", Address: { City: "Mumbai", State: "MH" }, Hobbies: ["Music","Dance"] },
+  { RollNo: 3, Name: "Akash", Age: 15, Branch: "Computer", Address: { City: "Pune", State: "MH" }, Hobbies: ["Football"] },
+  { RollNo: 4, Name: "Meera", Age: 18, Branch: "Electrical", Address: { City: "Nagpur", State: "MH" }, Hobbies: ["Reading","Painting"] },
+  { RollNo: 5, Name: "Rohan", Age: 16, Branch: "Mechanical", Address: { City: "Pune", State: "MH" }, Hobbies: ["Cycling"] },
+  { RollNo: 6, Name: "Anjali", Age: 17, Branch: "Computer", Address: { City: "Mumbai", State: "MH" }, Hobbies: ["Swimming"] },
+  { RollNo: 7, Name: "Karan", Age: 14, Branch: "IT", Address: { City: "Pune", State: "MH" }, Hobbies: ["Gaming"] },
+  { RollNo: 8, Name: "Sanya", Age: 19, Branch: "Electrical", Address: { City: "Nagpur", State: "MH" }, Hobbies: ["Reading"] },
+  { RollNo: 9, Name: "Aryan", Age: 16, Branch: "Mechanical", Address: { City: "Pune", State: "MH" }, Hobbies: ["Football","Music"] },
+  { RollNo: 10, Name: "Diya", Age: 15, Branch: "Computer", Address: { City: "Mumbai", State: "MH" }, Hobbies: ["Dance","Painting"] }
+])
+Check inserted documents:
+
+db.Students.find().pretty()
+
+
+1. Display all students’ information
+db.Students.find().pretty()
+
+2. Display students whose age > 15
+db.Students.find({ Age: { $gt: 15 } }).pretty()
+
+3. Display students sorted by Name
+db.Students.find().sort({ Name: 1 }).pretty()   // 1 for ascending, -1 for descending
+
+4. Update branch of RollNo 3 to "Computer"
+db.Students.updateOne(
+  { RollNo: 3 },
+  { $set: { Branch: "Computer" } }
+)
+
+5. Remove document with RollNo 1
+db.Students.deleteOne({ RollNo: 1 })
+
+6. Display students whose name starts with A
+db.Students.find({ Name: /^A/ }).pretty()
+
+7. Display total number of documents
+db.Students.countDocuments()
+
+8. Display only first 5 documents
+db.Students.find().limit(5).pretty()
+
+9. Display all documents instead of first 3
+db.Students.find().skip(0).pretty()   // skip 0 returns all
+
+10. Display names of students who live in Pune
+db.Students.find({ "Address.City": "Pune" }, { Name: 1, _id: 0 }).pretty()
+
+11. Display only Name of all students
+db.Students.find({}, { Name: 1, _id: 0 }).pretty()
+
+12. Drop Students collection
+db.Students.drop()

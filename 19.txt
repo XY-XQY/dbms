@@ -1,0 +1,37 @@
+-- Step 1: Create database and use it
+CREATE DATABASE IF NOT EXISTS EmployeeDB;
+USE EmployeeDB;
+
+-- Step 2: Create table emp with required fields and constraints
+CREATE TABLE emp (
+  Eno INT PRIMARY KEY AUTO_INCREMENT,  -- acts as sequence
+  Ename VARCHAR(50) NOT NULL,          -- cannot be NULL
+  Address VARCHAR(50) DEFAULT 'Nashik',-- default value if not given
+  Joindate DATE,
+  Salary DECIMAL(10,2)                 -- adding Salary field for the view later
+);
+
+-- Step 3: Set AUTO_INCREMENT starting value to 101
+ALTER TABLE emp AUTO_INCREMENT = 101;
+
+-- Step 4: Add a new column 'Post' after table creation
+ALTER TABLE emp ADD COLUMN Post VARCHAR(50);
+
+-- Step 5: Insert some data
+INSERT INTO emp (Ename, Address, Joindate, Salary, Post) VALUES
+('Amit', 'Pune', '2023-04-15', 35000, 'Developer'),
+('Neha', DEFAULT, '2022-12-10', 42000, 'Manager'),
+('Ravi', 'Mumbai', '2024-01-05', 28000, 'Clerk'),
+('Sneha', 'Nashik', '2023-07-01', 50000, 'Team Lead');
+
+-- Step 6: Create an index on Ename field
+CREATE INDEX idx_emp_ename ON emp(Ename);
+
+-- Step 7: Create a view to show only Ename and Salary
+CREATE OR REPLACE VIEW emp_view AS
+SELECT Ename, Salary
+FROM emp;
+
+-- Step 8: View data from table and view
+SELECT * FROM emp;
+SELECT * FROM emp_view;

@@ -1,0 +1,49 @@
+db.teacher.insertMany([
+  { name: "Rahul", department: "Computer", experience: 5, salary: 50000 },
+  { name: "Priya", department: "Computer", experience: 8, salary: 70000 },
+  { name: "Amit", department: "IT", experience: 4, salary: 45000 },
+  { name: "Sneha", department: "IT", experience: 6, salary: 60000 },
+  { name: "Rohan", department: "Mechanical", experience: 7, salary: 55000 },
+  { name: "Meera", department: "Mechanical", experience: 10, salary: 80000 },
+  { name: "Karan", department: "Electrical", experience: 3, salary: 40000 }
+])
+
+
+i) Department-wise average salary
+db.teacher.aggregate([
+  { $group: { 
+      _id: "$department", 
+      avgSalary: { $avg: "$salary" } 
+  }}
+])
+
+ii) Number of employees in each department
+db.teacher.aggregate([
+  { $group: { 
+      _id: "$department", 
+      totalEmployees: { $sum: 1 } 
+  }}
+])
+
+
+iii) Department-wise minimum salary
+db.teacher.aggregate([
+  { $group: { 
+      _id: "$department", 
+      minSalary: { $min: "$salary" } 
+  }}
+])
+
+i) Create an index on department
+db.teacher.createIndex({ department: 1 })
+
+
+Check indexes:
+db.teacher.getIndexes()
+
+ii) Drop the index on department
+db.teacher.dropIndex("department_1")
+
+
+Check indexes again:
+db.teacher.getIndexes()

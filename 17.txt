@@ -1,0 +1,95 @@
+CREATE TABLE Employee (
+  Eid INT PRIMARY KEY,
+  EName VARCHAR(50),
+  Address VARCHAR(50),
+  Salary DECIMAL(10,2),
+  Commission DECIMAL(10,2)
+);
+
+-- Create Project table
+CREATE TABLE Project (
+  PrNo INT PRIMARY KEY,
+  Addr VARCHAR(50)
+);
+🧩 Step 2 — Insert Sample Data
+sql
+Copy code
+INSERT INTO Employee VALUES
+(1, 'Amit', 'Pune', 35000, 5000),
+(2, 'Sneha', 'Pune', 25000, NULL),
+(3, 'Savita', 'Nasik', 28000, 2000),
+(4, 'Pooja', 'Mumbai', 19000, NULL),
+(5, 'Sagar', 'Mumbai', 25000, 3000);
+
+INSERT INTO Project VALUES
+(10, 'Mumbai'),
+(20, 'Pune'),
+(30, 'Jalgoan');
+
+
+🔹 1. Find different locations from where employees belong.
+SELECT DISTINCT Address 
+FROM Employee;
+
+🔹 2. Find maximum and minimum salary.
+SELECT MAX(Salary) AS Max_Salary, MIN(Salary) AS Min_Salary 
+FROM Employee;
+
+🔹 3. Display employee table in ascending order of salary.
+SELECT * 
+FROM Employee 
+ORDER BY Salary ASC;
+
+🔹 4. Find names of employees who live in Nasik or Pune.
+SELECT EName 
+FROM Employee 
+WHERE Address IN ('Nasik', 'Pune');
+
+🔹 5. Find names of employees who do not get commission.
+SELECT EName 
+FROM Employee 
+WHERE Commission IS NULL OR Commission = 0;
+
+🔹 6. Change the city of Amit to Nashik.
+UPDATE Employee
+SET Address = 'Nashik'
+WHERE EName = 'Amit';
+
+🔹 7. Find employees whose name starts with ‘A’.
+SELECT * 
+FROM Employee 
+WHERE EName LIKE 'A%';
+
+🔹 8. Find the count of staff from Mumbai.
+SELECT COUNT(*) AS Mumbai_Staff
+FROM Employee
+WHERE Address = 'Mumbai';
+
+🔹 9. Find the count of staff from each city.
+SELECT Address AS City, COUNT(*) AS Staff_Count
+FROM Employee
+GROUP BY Address;
+
+🔹 10. Find addresses where employees are from and projects are located.
+SELECT DISTINCT E.Address
+FROM Employee E
+JOIN Project P ON E.Address = P.Addr;
+
+
+🧠 Explanation:
+Shows cities common to both employees and project locations.
+
+🔹 11. Find city-wise minimum salary.
+SELECT Address AS City, MIN(Salary) AS Min_Salary
+FROM Employee
+GROUP BY Address;
+
+🔹 12. Find city-wise maximum salary having maximum salary greater than 26000.
+SELECT Address AS City, MAX(Salary) AS Max_Salary
+FROM Employee
+GROUP BY Address
+HAVING MAX(Salary) > 26000;
+
+🔹 13. Delete employees having salary greater than 30000.
+DELETE FROM Employee
+WHERE Salary > 30000;

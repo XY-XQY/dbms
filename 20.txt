@@ -1,0 +1,84 @@
+PART 1: INDEXING
+Step 1: Create Collection and Insert Documents
+use collegeDB   // create/select database
+
+db.students.insertMany([
+  { RollNo: 1, Name: "Navin", Age: 20, Branch: "Computer", City: "Pune" },
+  { RollNo: 2, Name: "Anusha", Age: 21, Branch: "IT", City: "Mumbai" },
+  { RollNo: 3, Name: "Ravi", Age: 19, Branch: "Computer", City: "Pune" },
+  { RollNo: 4, Name: "Veena", Age: 22, Branch: "Electrical", City: "Nagpur" },
+  { RollNo: 5, Name: "Pravini", Age: 20, Branch: "IT", City: "Mumbai" },
+  { RollNo: 6, Name: "Reena", Age: 21, Branch: "Computer", City: "Pune" },
+  { RollNo: 7, Name: "Geeta", Age: 23, Branch: "Mechanical", City: "Nagpur" },
+  { RollNo: 8, Name: "Akash", Age: 20, Branch: "Mechanical", City: "Pune" }
+])
+
+Step 2: Create Single Index
+# Single index on RollNo
+db.students.createIndex({ RollNo: 1 })
+
+Step 3: Create Compound Index
+# Compound index on Branch + City
+db.students.createIndex({ Branch: 1, City: 1 })
+
+Step 4: Create Unique Index
+# Unique index on RollNo
+db.students.createIndex({ RollNo: 1 }, { unique: true })
+
+Step 5: Show Index Information
+db.students.getIndexes()
+
+Step 6: Remove Index
+# Drop index on Branch + City
+db.students.dropIndex("Branch_1_City_1")
+
+PART 2: AGGREGATION ON STUDENT MARKS COLLECTION
+Step 1: Create Student Collection and Insert Data
+db.Student.insertMany([
+  { Rollno: 1, Name: 'Navin', Subject: 'DMSA', Marks: 78 },
+  { Rollno: 2, Name: 'Anusha', Subject: 'OSD', Marks: 75 },
+  { Rollno: 3, Name: 'Ravi', Subject: 'TOC', Marks: 69 },
+  { Rollno: 4, Name: 'Veena', Subject: 'TOC', Marks: 70 },
+  { Rollno: 5, Name: 'Pravini', Subject: 'OSD', Marks: 80 },
+  { Rollno: 6, Name: 'Reena', Subject: 'DMSA', Marks: 50 },
+  { Rollno: 7, Name: 'Geeta', Subject: 'CN', Marks: 90 },
+  { Rollno: 8, Name: 'Akash', Subject: 'CN', Marks: 85 }
+])
+
+Step 2: Aggregate Queries
+1️⃣ Max marks of each subject
+db.Student.aggregate([
+  { $group: { _id: "$Subject", MaxMarks: { $max: "$Marks" } } }
+])
+
+2️⃣ Min marks of each subject
+db.Student.aggregate([
+  { $group: { _id: "$Subject", MinMarks: { $min: "$Marks" } } }
+])
+
+3️⃣ Sum of marks of each subject
+db.Student.aggregate([
+  { $group: { _id: "$Subject", TotalMarks: { $sum: "$Marks" } } }
+])
+
+4️⃣ Average marks of each subject
+db.Student.aggregate([
+  { $group: { _id: "$Subject", AvgMarks: { $avg: "$Marks" } } }
+])
+
+5️⃣ First record of each subject
+db.Student.aggregate([
+  { $sort: { Rollno: 1 } },
+  { $group: { _id: "$Subject", FirstRecord: { $first: "$$ROOT" } } }
+])
+
+6️⃣ Last record of each subject
+db.Student.aggregate([
+  { $sort: { Rollno: 1 } },
+  { $group: { _id: "$Subject", LastRecord: { $last: "$$ROOT" } } }
+])
+
+7️⃣ Count of records in each subject
+db.Student.aggregate([
+  { $group: { _id: "$Subject", Count: { $sum: 1 } } }
+])

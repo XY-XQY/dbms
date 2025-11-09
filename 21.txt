@@ -1,0 +1,41 @@
+db.orderinfo.insertMany([
+  { cust_id: 123, cust_name: "abc", status: "A", price: 250 },
+  { cust_id: 124, cust_name: "xyz", status: "A", price: 500 },
+  { cust_id: 125, cust_name: "pqr", status: "B", price: 750 },
+  { cust_id: 126, cust_name: "lmn", status: "A", price: 1200 },
+  { cust_id: 127, cust_name: "stu", status: "B", price: 600 }
+])
+
+
+Add “Age” Field to All Documents
+db.orderinfo.updateMany(
+  {},                   
+  { $set: { Age: 25 } }     
+)
+
+
+Create Complex Index and Drop Duplicates
+i) Create a Compound Index on cust_id + status
+db.orderinfo.createIndex(
+  { cust_id: 1, status: 1 },
+  { unique: true, dropDups: true }
+)
+db.orderinfo.getIndexes()
+
+
+Display Average Price for Each Customer Grouped by Status
+db.orderinfo.aggregate([
+  { $group: { 
+      _id: "$status", 
+      avgPrice: { $avg: "$price" } 
+  }}
+])
+
+
+Change Customer Name Whose Status is “B”
+db.orderinfo.updateMany(
+  { status: "B" },
+  { $set: { cust_name: "UpdatedName" } }
+)
+
+db.orderinfo.find({ status: "B" }).pretty()

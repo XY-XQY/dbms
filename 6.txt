@@ -1,0 +1,71 @@
+CREATE TABLE Stud_Marks (
+  Roll INT PRIMARY KEY,
+  Name VARCHAR(50),
+  Total_Marks INT
+);
+
+CREATE TABLE Result (
+  Roll INT,
+  Name VARCHAR(50),
+  Class VARCHAR(50)
+);
+
+
+INSERT INTO Stud_Marks VALUES 
+(1, 'Tanishk', 1450),
+(2, 'Amit', 950),
+(3, 'Riya', 880),
+(4, 'Neha', 810);
+
+
+DELIMITER $$
+
+CREATE PROCEDURE proc_Grade(IN p_roll INT)
+BEGIN
+  DECLARE v_name VARCHAR(50);
+  DECLARE v_marks INT;
+  DECLARE v_class VARCHAR(50);
+  DECLARE not_found CONDITION FOR SQLSTATE '02000';
+
+  -- Exception handler (if roll not found)
+  DECLARE EXIT HANDLER FOR not_found
+  BEGIN
+    SELECT CONCAT('Error: No student found with Roll No ', p_roll) AS Message;
+  END;
+
+  -- Fetch name and marks
+  SELECT Name, Total_Marks INTO v_name, v_marks
+  FROM Stud_Marks
+  WHERE Roll = p_roll;
+
+  -- Control structure: Grade classification
+  IF v_marks BETWEEN 990 AND 1500 THEN
+    SET v_class = 'Distinction';
+  ELSEIF v_marks BETWEEN 900 AND 989 THEN
+    SET v_class = 'First Class';
+  ELSEIF v_marks BETWEEN 825 AND 899 THEN
+    SET v_class = 'Higher Second Class';
+  ELSE
+    SET v_class = 'Fail';
+  END IF;
+
+  -- Insert result
+  INSERT INTO Result (Roll, Name, Class)
+  VALUES (p_roll, v_name, v_class);
+
+  -- Display message
+  SELECT CONCAT('Roll No: ', p_roll, ' | Name: ', v_name,
+                ' | Marks: ', v_marks, ' | Category: ', v_class) AS Output;
+
+END$$
+
+DELIMITER ;
+
+CALL proc_Grade(1);
+CALL proc_Grade(2);
+CALL proc_Grade(3);
+CALL proc_Grade(4);
+CALL proc_Grade(10); -- to test invalid roll exception
+
+
+SELECT * FROM Result;

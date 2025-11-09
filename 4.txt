@@ -1,0 +1,58 @@
+INSERT INTO student VALUES
+(1, 'Amita', 'Computer', 100),
+(2, 'Samir', 'Mechanical', 80),
+(3, 'Kamal', 'Computer', 120),
+(4, 'Ramesh', 'Civil', 90),
+(5, 'Tanmaya', 'Computer', 110),
+(6, 'Pooja', 'Electrical', 85);
+
+-- Insert sample instructor data
+INSERT INTO instructor VALUES
+(1, 'Amit', 'Computer', 40000),
+(2, 'Amol', 'Mechanical', 38000),
+(3, 'Ravi', 'Computer', 45000),
+(4, 'Sneha', 'Electrical', 46000),
+(5, 'Kiran', 'Civil', 50000),
+(6, 'Neha', 'Computer', 48000);
+
+-- Insert sample course data
+INSERT INTO course VALUES
+(1, 'DBMS', 'Computer', 4),
+(2, 'OS', 'Computer', 4),
+(3, 'Thermodynamics', 'Mechanical', 3),
+(4, 'Circuits', 'Electrical', 3),
+(5, 'Structures', 'Civil', 4); 
+
+
+🔹 (i) Find the average salary of instructors in departments where the average salary > 42000.
+SELECT dept_name, AVG(salary) AS avg_salary
+FROM instructor
+GROUP BY dept_name
+HAVING AVG(salary) > 42000;
+
+
+🔹 (ii) Increase salary of each instructor in Computer department by 10%.
+UPDATE instructor
+SET salary = salary * 1.10
+WHERE dept_name = 'Computer';
+
+
+🔹 (iii) Find names of instructors whose names are neither 'Amol' nor 'Amit'.
+SELECT name 
+FROM instructor
+WHERE name NOT IN ('Amol', 'Amit');
+
+
+🔹 (iv) Find names of students that contain ‘am’ as a substring.
+SELECT name 
+FROM student
+WHERE name LIKE '%am%';
+
+
+🔹 (v) Find names of students from Computer department that take ‘DBMS’ course.
+
+SELECT s.name, s.dept_name, c.title
+FROM student s
+JOIN course c
+ON s.dept_name = c.dept_name
+WHERE c.title = 'DBMS' AND s.dept_name = 'Computer';

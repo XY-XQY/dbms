@@ -1,0 +1,60 @@
+# Create Teachers collection
+db.createCollection("Teachers")
+
+# Create Department collection
+db.createCollection("Department")
+
+# Create Students collection
+db.createCollection("Students")
+
+
+db.Teachers.insertMany([
+  { Tname: "Rahul Sharma", dno: 1, Experience: 5, Salary: 12000, Date_of_Joining: "2019-06-10" },
+  { Tname: "Priya Patil", dno: 2, Experience: 8, Salary: 15000, Date_of_Joining: "2017-08-22" },
+  { Tname: "Amit Verma", dno: 2, Experience: 4, Salary: 9000, Date_of_Joining: "2020-03-15" },
+  { Tname: "Sneha Joshi", dno: 3, Experience: 10, Salary: 18000, Date_of_Joining: "2015-12-01" }
+])
+
+
+db.Department.insertMany([
+  { Dno: 1, Dname: "Computer Engineering" },
+  { Dno: 2, Dname: "Information Technology" },
+  { Dno: 3, Dname: "Electronics" }
+])
+
+
+db.Students.insertMany([
+  { Sname: "Aarav", Roll_No: 1, Class: "FE" },
+  { Sname: "Isha", Roll_No: 2, Class: "SE" },
+  { Sname: "xyz", Roll_No: 3, Class: "TE" },
+  { Sname: "Karan", Roll_No: 4, Class: "FE" },
+  { Sname: "Meera", Roll_No: 5, Class: "BE" }
+])
+
+
+1️⃣ Find all teachers of dno=2 with salary ≥ 10,000
+db.Teachers.find(
+  { dno: 2, Salary: { $gte: 10000 } }
+).pretty()
+
+2️⃣ Find students with Roll_No=2 OR Sname='xyz'
+db.Students.find(
+  { $or: [ { Roll_No: 2 }, { Sname: "xyz" } ] }
+).pretty()
+
+3️⃣ Update student name whose Roll_No=5
+db.Students.updateOne(
+  { Roll_No: 5 },
+  { $set: { Sname: "Meera Deshmukh" } }
+)
+
+db.Students.find({ Roll_No: 5 }).pretty()
+
+4️⃣ Delete all students whose Class='FE'
+db.Students.deleteMany({ Class: "FE" })
+
+
+5️⃣ Apply index on Students Collection
+Create index on Roll_No (fast lookup by roll number):
+
+db.Students.createIndex({ Roll_No: 1 })

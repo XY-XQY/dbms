@@ -1,0 +1,94 @@
+CREATE DATABASE IF NOT EXISTS UniversityDB;
+USE UniversityDB;
+
+-- Instructor Table
+CREATE TABLE instructor (
+  T_ID INT PRIMARY KEY,
+  name VARCHAR(50),
+  dept_name VARCHAR(50),
+  salary DECIMAL(10,2)
+);
+
+-- Student Table
+CREATE TABLE student (
+  S_ID INT PRIMARY KEY,
+  name VARCHAR(50),
+  dept_name VARCHAR(50),
+  tot_cred INT
+);
+
+-- Course Table
+CREATE TABLE course (
+  course_id INT PRIMARY KEY,
+  title VARCHAR(100),
+  dept_name VARCHAR(50),
+  credits INT
+);
+
+-- Teaches Table
+CREATE TABLE teaches (
+  T_ID INT,
+  course_id INT,
+  sec_id INT,
+  semester VARCHAR(20),
+  year YEAR,
+  FOREIGN KEY (T_ID) REFERENCES instructor(T_ID),
+  FOREIGN KEY (course_id) REFERENCES course(course_id)
+);
+
+
+-- Instructors
+INSERT INTO instructor VALUES
+(1, 'Amit', 'Computer', 50000),
+(2, 'Ravi', 'Mechanical', 45000),
+(3, 'Sneha', 'Electrical', 47000),
+(4, 'Kiran', 'Civil', 49000);
+
+-- Students
+INSERT INTO student VALUES
+(1, 'Tanishk', 'Computer', 110),
+(2, 'Pooja', 'Mechanical', 95),
+(3, 'Riya', NULL, 80),
+(4, 'Nitin', 'Civil', 100);
+
+-- Courses
+INSERT INTO course VALUES
+(101, 'DBMS', 'Computer', 4),
+(102, 'Thermodynamics', 'Mechanical', 3),
+(103, 'Circuits', 'Electrical', 3),
+(104, 'Structures', 'Civil', 4);
+
+-- Teaches
+INSERT INTO teaches VALUES
+(1, 101, 1, 'Spring', 2024),
+(1, 101, 2, 'Autumn', 2024),
+(2, 102, 1, 'Spring', 2024),
+(3, 103, 1, 'Autumn', 2024),
+(4, 104, 1, 'Spring', 2024);
+
+
+🔹 (i) Find the names of instructors who have taught the courses semester-wise
+SELECT i.name AS Instructor_Name, 
+       c.title AS Course_Title,
+       t.semester,
+       t.year
+FROM instructor i
+JOIN teaches t ON i.T_ID = t.T_ID
+JOIN course c ON t.course_id = c.course_id
+ORDER BY t.semester, i.name;
+
+
+🔹 (ii) Create a View on student table showing student details
+CREATE OR REPLACE VIEW student_view AS
+SELECT S_ID, name, dept_name, tot_cred
+FROM student;
+
+
+🔹 (iii) Rename the column dept_name to department_name in student table
+ALTER TABLE student 
+CHANGE dept_name department_name VARCHAR(50);
+
+
+🔹 (iv) Delete students whose department is NULL
+DELETE FROM student
+WHERE department_name IS NULL;

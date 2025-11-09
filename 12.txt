@@ -1,0 +1,59 @@
+CREATE TABLE Lib (
+  Book_ID INT PRIMARY KEY,
+  Book_Name VARCHAR(100),
+  Author VARCHAR(100),
+  Price DECIMAL(10,2)
+);
+
+
+CREATE TABLE Library_Audit (
+  Audit_ID INT AUTO_INCREMENT PRIMARY KEY,
+  Book_ID INT,
+  Book_Name VARCHAR(100),
+  Author VARCHAR(100),
+  Price DECIMAL(10,2),
+  Operation_Type VARCHAR(20),
+  Operation_Date DATETIME
+);
+
+INSERT INTO Lib VALUES
+(1, 'C Programming', 'Dennis Ritchie', 500.00),
+(2, 'DBMS Concepts', 'Korth', 650.00),
+(3, 'Operating Systems', 'Galvin', 700.00);
+
+DELIMITER $$
+
+CREATE TRIGGER before_library_update
+BEFORE UPDATE ON Lib
+FOR EACH ROW
+BEGIN
+  INSERT INTO Library_Audit (Book_ID, Book_Name, Author, Price, Operation_Type, Operation_Date)
+  VALUES (OLD.Book_ID, OLD.Book_Name, OLD.Author, OLD.Price, 'UPDATE', NOW());
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER before_library_delete
+BEFORE DELETE ON Lib
+FOR EACH ROW
+BEGIN
+  INSERT INTO Library_Audit (Book_ID, Book_Name, Author, Price, Operation_Type, Operation_Date)
+  VALUES (OLD.Book_ID, OLD.Book_Name, OLD.Author, OLD.Price, 'DELETE', NOW());
+END$$
+
+DELIMITER ;
+
+
+🔹 Update a record
+UPDATE Lib
+SET Price = 800.00
+WHERE Book_ID = 3;
+
+🔹 Delete a record
+DELETE FROM Lib
+WHERE Book_ID = 2;
+
+

@@ -1,0 +1,85 @@
+-- Employee table
+CREATE TABLE Empl (
+  e_no INT PRIMARY KEY,
+  e_name VARCHAR(50),
+  post VARCHAR(50),
+  pay_rate DECIMAL(10,2)
+);
+
+-- Position table renamed to 'Posi'
+CREATE TABLE Posi (
+  pos_no INT PRIMARY KEY,
+  post VARCHAR(50)
+);
+
+-- Duty Allocation table
+CREATE TABLE Duty_alloc (
+  pos_no INT,
+  e_no INT,
+  month VARCHAR(20),
+  year INT,
+  shift VARCHAR(20),
+  FOREIGN KEY (pos_no) REFERENCES Posi(pos_no),
+  FOREIGN KEY (e_no) REFERENCES Empl(e_no)
+);
+
+-- Step 4: Insert data
+
+-- Employees
+INSERT INTO Empl VALUES
+(101, 'Amit', 'Manager', 60000),
+(102, 'Ravi', 'Engineer', 45000),
+(103, 'Sneha', 'Clerk', 30000),
+(104, 'Sachin', 'Engineer', 48000),
+(105, 'Neha', 'Manager', 65000),
+(123, 'Pooja', 'Clerk', 32000);
+
+-- Positions
+INSERT INTO Posi VALUES
+(1, 'Manager'),
+(2, 'Engineer'),
+(3, 'Clerk');
+
+-- Duty Allocations
+INSERT INTO Duty_alloc VALUES
+(1, 101, 'April', 2003, 'First'),
+(2, 104, 'April', 2003, 'Second'),
+(3, 123, 'April', 2003, 'First'),
+(2, 102, 'March', 2003, 'First'),
+(1, 105, 'April', 2003, 'Third');
+
+-- Step 5: Queries
+
+-- (i) Get duty allocation details for e_no 123 for the first shift in April 2003
+SELECT * 
+FROM Duty_alloc
+WHERE e_no = 123
+  AND shift = 'First'
+  AND month = 'April'
+  AND year = 2003;
+
+-- (ii) Get employees whose pay_rate >= rate of pay of employee 'Sachin'
+SELECT e_name, post, pay_rate
+FROM Empl
+WHERE pay_rate >= (
+  SELECT pay_rate FROM Empl WHERE e_name = 'Sachin'
+);
+
+-- (iii) Create view showing min, max, and avg salary for all posts
+CREATE OR REPLACE VIEW SalaryStats AS
+SELECT post,
+       MIN(pay_rate) AS Min_Salary,
+       MAX(pay_rate) AS Max_Salary,
+       AVG(pay_rate) AS Avg_Salary
+FROM Empl
+GROUP BY post;
+
+-- View the salary stats
+SELECT * FROM SalaryStats;
+
+-- (iv) Get count of different employees on each shift having post 'Manager'
+SELECT d.shift, COUNT(DISTINCT d.e_no) AS Manager_Count
+FROM Duty_alloc d
+JOIN Empl e ON d.e_no = e.e_no
+WHERE e.post = 'Manager'
+GROUP BY d.shift;

@@ -1,0 +1,42 @@
+Create orderinfo collection with sample documents
+db.orderinfo.insertMany([
+  { cust_id: 123, cust_name: "abc", status: "A", price: 250 },
+  { cust_id: 124, cust_name: "xyz", status: "A", price: 500 },
+  { cust_id: 125, cust_name: "pqr", status: "B", price: 750 },
+  { cust_id: 126, cust_name: "lmn", status: "A", price: 1200 }
+])
+
+
+Check inserted documents:
+
+db.orderinfo.find().pretty()
+
+Step 3: Queries
+i) Find the average price for each customer having status 'A'
+db.orderinfo.aggregate([
+  { $match: { status: "A" } },                // Filter status 'A'
+  { $group: {
+      _id: "$cust_name",                       // Group by customer name
+      averagePrice: { $avg: "$price" }         // Compute average price
+  }}
+])
+
+
+ii) Display the status of customers whose price lies between 100 and 1000
+db.orderinfo.find(
+  { price: { $gte: 100, $lte: 1000 } },    // price between 100 and 1000
+  { status: 1, _id: 0 }                     // show only status, hide _id
+)
+
+
+iii) Display customer information without _id
+db.orderinfo.find({}, { _id: 0 })
+
+
+iv) Create a simple index on orderinfo collection
+Create index on cust_id (or any field you want to speed up queries):
+db.orderinfo.createIndex({ cust_id: 1 })
+
+
+Check existing indexes:
+db.orderinfo.getIndexes()
