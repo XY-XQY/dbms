@@ -1,0 +1,45 @@
+Chit 23 — MySQL + Java (Two-tier) Employee table operations
+
+i. Create table:
+
+CREATE TABLE Employee (
+  SSN INT PRIMARY KEY,
+  Ename VARCHAR(100),
+  state VARCHAR(50),
+  salary DECIMAL(12,2)
+);
+
+
+ii. Insert records:
+
+INSERT INTO Employee VALUES (101,'Ramesh','MH',20000),(102,'Suresh','Gujrat',18000);
+
+
+iii. Retrieve details based on SSN (SQL):
+
+SELECT * FROM Employee WHERE SSN = ?;
+-- JDBC: use PreparedStatement with ? bind parameter for SSN
+
+
+iv. Update employee state from 'MH' to 'TN':
+
+UPDATE Employee SET state = 'TN' WHERE state = 'MH';
+
+
+v. Delete all employees from 'Gujrat':
+
+DELETE FROM Employee WHERE state = 'Gujrat';
+
+
+JDBC snippet (Java) for retrieval:
+
+// assume Connection conn exists
+String sql = "SELECT * FROM Employee WHERE SSN = ?";
+try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    ps.setInt(1, 101);
+    try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+           System.out.println(rs.getInt("SSN") + " " + rs.getString("Ename"));
+        }
+    }
+}
